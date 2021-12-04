@@ -12,25 +12,24 @@ def login():
     nick = request.form.get("nick")
     return render_template("Login.html", nick=nick)
 
-@app.route('/Ingresar')
-def ingresar():
-    return render_template('Ingresar.html')
-
 @app.route('/Crear')
 def crear():
-    return render_template('Crear.html')
+    name_sala = request.form.get("name_sala")
+    contrasenia = request.form.get("contrasenia")
+    return render_template('Crear.html', name_sala=name_sala, contrasenia=contrasenia)
 
-"""
-@app.route('/Crear.html')
-def game():
-    return render_template('Admin.html')
+@app.route('/Ingresar')
+def ingresar():
+    contrasenia = request.form.get("contrasenia")
+    return render_template('Ingresar.html', contrasenia=contrasenia)
 
-@app.route('/Ingresar.html')
-def game():
+@app.route('/Tutor')
+def tutor():
+    return render_template('Tutor.html')
+
+@app.route('/Pupilo')
+def pupilo():
     return render_template('Pupilo.html')
-"""
-
-#PROBANDO EL GIT HUB..
 
 if __name__ == "__main__":
     app.run(port = 3000, debug = True)
