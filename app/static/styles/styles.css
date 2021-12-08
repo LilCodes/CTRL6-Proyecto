@@ -2,19 +2,19 @@
     height: 80vh;
     position: fixed;
 
-    left: 50%;
-    top: 50%;
+    left: 25%;
+    top: 10%;
 
     z-index: 1;
     display:block;
 }
 
 .wal2 {
-    height: 30vh;
+    height: 47vh;
     position: fixed;
 
-    left: 70%;
-    top: 50%;
+    left: 65%;
+    top: 6%;
 
     z-index: 1;
     display:block;
@@ -24,18 +24,6 @@
     position: fixed;
     height: 10vh;
     margin: 3%;
-
-    z-index: 1;
-    display:block;
-}
-
-.cuadro2 {
-    height: 5%;
-    position: fixed;
-
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
 
     z-index: 1;
     display:block;

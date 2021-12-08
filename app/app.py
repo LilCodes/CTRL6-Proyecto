@@ -71,16 +71,39 @@ def ingresar1():
 def pupilo():
     return render_template('Pupilo.html')
 
-""" @app.route('/chronometer-update', methods = ['POST'])
-def handleChronometer():
-    values = request.status
-    return "ok" """
-
 @socketio.on('send-update', namespace='/chronometer-update')
 def text(message):
     print(message)
     emit('chronometerStatus', {'msg': message}, broadcast=True)
 
+
+#-------------
+#-------------
+'''
+@socketio.on('join', namespace='/chat')
+def join(message):
+    room = session.get('room')
+    join_room(room)
+    emit('status', {'msg':  session.get('username') + ' has entered the room.'}, room=room)
+
+
+@socketio.on('text', namespace='/chat')
+def text(message):
+    room = session.get('room')
+    emit('message', {'msg': session.get('username') + ' : ' + message['msg']}, room=room)
+
+
+@socketio.on('left', namespace='/chat')
+def left(message):
+    room = session.get('room')
+    username = session.get('username')
+    leave_room(room)
+    session.clear()
+    emit('status', {'msg': username + ' has left the room.'}, room=room)
+'''
+#-------------
 #---------------
+
 if __name__ == "__main__":
+    #socketio.on(app)
     app.run(port = 3000, debug = True)
