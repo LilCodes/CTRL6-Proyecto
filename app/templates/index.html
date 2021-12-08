@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta lang="es">
 
-    <title> Control +6</title>
+    <title>CTRL Digital</title>
     
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styles.css') }}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -16,17 +16,16 @@
 
 <body>
     <div class="fondo">
-    
+        <img class='ctrl' src="{{url_for('static', filename='images/logo-app.png') }}">
+
         <img class='walter' src="{{ url_for('static', filename='images/walter-cartel.png') }}">
 
         <form class="formulario_indice" method="POST" action="{{url_for('login')}}">
-            <input name="nombre" required type="text" placeholder="Ingrese su nombre">
+            <input name="nm" type="text" placeholder="Ingrese su nombre">
             <input type="submit" class="btn btn-info btn-lg" value="Ingresar">
         </form>
     </div>
 
-    
 </body>
-
 
 </html>
