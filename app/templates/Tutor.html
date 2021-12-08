@@ -12,13 +12,128 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
 <head>
 
 <body>
     <div class="fondo">
-        <img class='ctrl' src="{{url_for('static', filename='images/logo-app.png') }}">
-        
+        <img class='ctrl' src="{{ url_for('static', filename='images/logo-app.png') }}">
+        <!--<img class='cuadro2' src="{{ url_for('static', filename='images/recuadro-2.png') }}">
+        <img class='wal2' src="{{ url_for('static', filename='images/walter-kids.png') }}">-->
+        <div class="card">
+
+
+
+            <div id="countdown" style="font-weight: bold;"></div>
+            <br>
+            <label for="fname">Ingresa el tiempo para el temporizador</label>
+            <input type="number" id="tiempo" name="tiempo">
+            <span style="color: red; display: none" id="error">Ingresa un tiempo porfavor.</span>
+            <button onclick="startTimer()">Ingresar</button>
+            <br>
+            <button id="button" onclick="pauseTimer()">Play</button> <button onclick="restartTimer()">Restart</button>
+        </div>
     </div>
+    <style>
+        .card {
+            margin: 0 auto;
+            padding: 50px;
+            display: block;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            background-color: #bee5fc;
+            border-radius: 12px;
+            box-shadow: 0 10px 10px -5px #909090;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            float: right;
+        }
+        #countdown {
+            font-size: 48px;
+        }
+    </style>
+    <script>
+        var timeInSecs;
+        var ticker;
+        var pause = false;
+        var socket = io.connect('http://' + document.domain + ':' + location.port + '/chronometer-update');
+
+
+        function startTimer() {
+            pause = true;
+            tiempo = document.getElementById("tiempo").value;
+            if(tiempo != '' || tiempo != null || tiempo != ' '){
+                timeInSecs = parseInt(tiempo);
+                firstTick();
+                ticker = setInterval("tick()", 1000);
+                document.getElementById("error").style.display = 'none';
+                socket.emit('send-update', {msg: tiempo});
+            }
+            else{
+                document.getElementById("error").style.display = 'inline';
+            }
+            
+        }
+
+        function pauseTimer(){
+            var button = document.getElementById('button');
+            if (button.innerHTML == 'Play') 
+                button.innerHTML = 'Pause';
+            else button.innerHTML = 'Play'; 
+            pause = !pause;
+            socket.emit('send-update', {msg: 'pause'});
+        }
+
+
+        function restartTimer(){
+            clearInterval(ticker);
+            var pretty = "00:00";
+            document.getElementById("countdown").innerHTML = pretty;
+            socket.emit('send-update', {msg: 'restart'});
+        }
+
+        function tick(){
+            if(!pause){
+                var secs = timeInSecs;
+                if (secs > 0) {
+                    timeInSecs--; 
+                }
+                else {
+                    restartTimer();
+                }
+
+                var mins = Math.floor(secs/60);
+                secs %= 60;
+                var pretty = ( (mins < 10) ? "0" : "" ) + mins + ":" + ( (secs < 10) ? "0" : "" ) + secs;
+                document.getElementById("countdown").innerHTML = pretty;
+            }
+        }
+
+        function firstTick(){
+            var secs = timeInSecs;
+            if (secs > 0) {
+                timeInSecs--; 
+            }
+            else {
+                restartTimer();
+            }
+
+            var mins = Math.floor(secs/60);
+            secs %= 60;
+            var pretty = ( (mins < 10) ? "0" : "" ) + mins + ":" + ( (secs < 10) ? "0" : "" ) + secs;
+            document.getElementById("countdown").innerHTML = pretty;
+        }
+
+        restartTimer();
+
+
+        //startTimer(10*60); // 4 minutes in seconds
+
+        //Credits to Gulzaib from Pakistan
+    </script>
     
 </body>
 

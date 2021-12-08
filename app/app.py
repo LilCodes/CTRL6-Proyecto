@@ -1,7 +1,20 @@
 from os import name
 from flask import Flask, render_template, request, redirect, url_for
+from flask_socketio import SocketIO, join_room, leave_room, emit
 
 app=Flask(__name__)
+
+app.debug = True
+app.config['SECRET_KEY'] = 'secret'
+app.config['SESSION_TYPE'] = 'filesystem'
+
+
+socketio = SocketIO(app, manage_session=False)
+
+values = {
+    'slider1': 25,
+    'slider2': 0,
+}
 
 @app.route("/")
 def index():
@@ -57,6 +70,16 @@ def ingresar1():
 @app.route('/Pupilo')
 def pupilo():
     return render_template('Pupilo.html')
+
+""" @app.route('/chronometer-update', methods = ['POST'])
+def handleChronometer():
+    values = request.status
+    return "ok" """
+
+@socketio.on('send-update', namespace='/chronometer-update')
+def text(message):
+    print(message)
+    emit('chronometerStatus', {'msg': message}, broadcast=True)
 
 #---------------
 if __name__ == "__main__":
