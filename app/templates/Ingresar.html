@@ -16,7 +16,9 @@
 
 <body>
     <div class="fondo">
-        <img class='ctrl' src="{{url_for('static', filename='images/logo-app.png') }}">
+        <a href="http://127.0.0.1:3000">
+            <img class='ctrl' src="{{ url_for('static', filename='images/logo-app.png') }}">
+        </a>
 
         <img class='walter' src="{{ url_for('static', filename='images/walter-cartel.png') }}">
 
@@ -26,6 +28,8 @@
         </form>
 
     </div>
+
+    
 </body>
 
 

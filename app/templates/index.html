@@ -16,12 +16,14 @@
 
 <body>
     <div class="fondo">
-        <img class='ctrl' src="{{url_for('static', filename='images/logo-app.png') }}">
+        <a href="http://127.0.0.1:3000">
+            <img class='ctrl' src="{{ url_for('static', filename='images/logo-app.png') }}">
+        </a>
 
         <img class='walter' src="{{ url_for('static', filename='images/walter-cartel.png') }}">
 
         <form class="formulario_indice" method="POST" action="{{url_for('login')}}">
-            <input name="nm" type="text" placeholder="Ingrese su nombre">
+            <input name="nm" required type="text" placeholder="Ingrese su nombre">
             <input type="submit" class="btn btn-info btn-lg" value="Ingresar">
         </form>
     </div>

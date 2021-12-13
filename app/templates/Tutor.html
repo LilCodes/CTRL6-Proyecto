@@ -13,18 +13,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+        
+
 <head>
 
 <body>
     <div class="fondo">
-        <img class='ctrl' src="{{ url_for('static', filename='images/logo-app.png') }}">
+
+        <div id="chatcito">
+            <div id="contenido">
+            </div>
+        </div>
+
+        <form id="chat">
+            <input type="text" id="chatcito-escribir" value=""></input>
+        </form>
+
+        <a href="http://127.0.0.1:3000">
+            <img class='ctrl' src="{{ url_for('static', filename='images/logo-app.png') }}">
+        </a>
         
         <img class='wal2' src="{{ url_for('static', filename='images/walter-kids.png') }}">
 
         <div class="card">
-
-
-
             <div id="countdown" style="font-weight: bold;"></div>
             <br>
             <label for="fname">Ingresa el tiempo para el temporizador</label>
@@ -55,8 +66,71 @@
         }
         #countdown {
             font-size: 48px;
+            color: rgb(62, 136, 170);
         }
+
+        #contenido {
+            display: block;
+        }
+
+        #contenido > p {
+            font-size: 1rem;
+            margin-left: 1rem;
+            margin-right: 1rem;
+            margin-bottom: 0.5rem;
+            margin-top: 0.5rem;
+
+            
+        }
+        #chatcito {
+            height: 65vh;
+            width: 20vw;
+            background-color: white;
+            position: fixed;
+            z-index: 10000;
+            top: 50%;
+            margin-left: 1.5vw;
+            transform: translate(0%, -50%);
+            overflow-y: scroll;
+        }
+
+        #chatcito-escribir {
+            background-color: white;
+            position: fixed;
+            z-index: 10000;
+            top: 85%;
+            width: 20vw;
+            margin-left: 1.5vw;
+            overflow-y: scroll;
+        }
+
     </style>
+
+    <script type="text/javascript" charset="utf-8">
+        var socket_chat;
+        $(document).ready(function(){
+            socket_chat = io.connect('http://' + document.domain + ':' + location.port + '/chat');
+            socket_chat.on('connect', function() {
+                socket_chat.emit('join', {});
+            });
+
+            socket_chat.on('message', function(data) {
+                $('#chatcito').val($('#chatcito').val() + data.msg + '\n');
+                $('#chatcito').scrollTop($('#chatcito')[0].scrollHeight);
+                $("#chatcito").append(`<p> ${data.msg} </p>`)
+                console.log("Llegó una wea: ", data.msg)
+            });
+
+            $('#chat').submit(function(e) {
+                text = $('#chatcito-escribir').val();
+                $('#chatcito-escribir').val('');
+                socket_chat.emit("message", {msg: text});
+                e.preventDefault();
+                console.log(text)
+            });
+        });
+    </script>
+
     <script>
         var timeInSecs;
         var ticker;
